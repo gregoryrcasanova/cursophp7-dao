@@ -33,7 +33,6 @@ class Usuario {
     }
 
     public function loadById($id) {
-
         $sql = new Sql();
 
         $results = $sql->select("SELECT * FROM tb_usuarios WHERE id_usuario = :ID", [
@@ -48,6 +47,45 @@ class Usuario {
             $this->setDesc_login($row['desc_login']);
             $this->setDesc_senha($row['desc_senha']);
             $this->setDt_cadastro(new DateTime($row['dt_cadastro']));
+
+        }
+
+    }
+
+    public static function getList() {
+        $sql = new Sql;
+
+        return $sql->select("SELECT * FROM tb_usuarios ORDER BY desc_login DESC");
+    }
+
+    public static function search($login) {
+
+        $sql = new Sql;
+
+        return $sql->select("SELECT * FROM tb_usuarios WHERE desc_login LIKE :SEARCH ORDER BY desc_login", [':SEARCH' => "%".$login."%"]);
+
+    }
+
+    public function login($login, $password) {
+        $sql = new Sql();
+
+        $results = $sql->select("SELECT * FROM tb_usuarios WHERE desc_login = :LOGIN AND desc_senha = :PASSWORD", [
+            ":LOGIN" => $login,
+            ":PASSWORD" => $password
+        ]);
+
+        if (count($results) > 0) {
+
+            $row = $results[0];
+
+            $this->setId_usuario($row['id_usuario']);
+            $this->setDesc_login($row['desc_login']);
+            $this->setDesc_senha($row['desc_senha']);
+            $this->setDt_cadastro(new DateTime($row['dt_cadastro']));
+
+        } else {
+
+            throw new Exception("Login e/ou senha inválidos.");
 
         }
 
