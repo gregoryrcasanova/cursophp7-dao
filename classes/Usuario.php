@@ -7,6 +7,11 @@ class Usuario {
     private $desc_senha;
     private $dt_cadastro;
 
+    public function __construct($login = NULL, $password = NULL) {
+        $this->setDesc_login($login);
+        $this->setDesc_senha($password);
+    }
+
     public function getId_usuario() {
         return $this->id_usuario;
     }
@@ -41,12 +46,7 @@ class Usuario {
 
         if (count($results) > 0) {
 
-            $row = $results[0];
-
-            $this->setId_usuario($row['id_usuario']);
-            $this->setDesc_login($row['desc_login']);
-            $this->setDesc_senha($row['desc_senha']);
-            $this->setDt_cadastro(new DateTime($row['dt_cadastro']));
+            $this->setData($results[0]);
 
         }
 
@@ -76,18 +76,49 @@ class Usuario {
 
         if (count($results) > 0) {
 
-            $row = $results[0];
-
-            $this->setId_usuario($row['id_usuario']);
-            $this->setDesc_login($row['desc_login']);
-            $this->setDesc_senha($row['desc_senha']);
-            $this->setDt_cadastro(new DateTime($row['dt_cadastro']));
+            $this->setData($results[0]);
 
         } else {
 
             throw new Exception("Login e/ou senha inválidos.");
 
         }
+
+    }
+
+    public function insert() {
+        $sql = new Sql();
+
+        $results = $sql->select("CALL sp_usuarios_insert(:LOGIN, :PASSWORD)", [
+            ':LOGIN' => $this->getDesc_login(),
+            ':PASSWORD' => $this->getDesc_senha()
+        ]);
+
+        if (count($results) > 0) {
+            $this->setData($results[0]);
+        }
+
+    }
+
+    public function update($login, $password) {
+
+        $this->setDesc_login($login);
+        $this->setDesc_senha($password);
+
+        $sql = new Sql();
+        $sql->query("UPDATE tb_usuarios SET desc_login = :LOGIN, desc_senha = :PASSWORD WHERE id_usuario = :ID", [
+            'LOGIN' => $this->getDesc_login(),
+            'PASSWORD' => $this->getDesc_senha(),
+            ':ID' => $this->getId_usuario()
+        ]);
+    }
+
+    public function setData($data) {
+
+        $this->setId_usuario($data['id_usuario']);
+        $this->setDesc_login($data['desc_login']);
+        $this->setDesc_senha($data['desc_senha']);
+        $this->setDt_cadastro(new DateTime($data['dt_cadastro']));
 
     }
 
