@@ -22,13 +22,20 @@ $usuario->login("user", '12345');
 // echo $usuario;
 
 // Criando um novo usuário
-$aluno = new Usuario("aluno", "@alun0");
-// $aluno->setDesc_login("aluno");
-// $aluno->setDesc_senha("@alun0");
-$aluno->insert();
-// echo $aluno;
+    // $aluno = new Usuario("aluno", "@alun0");
+    // $aluno->setDesc_login("aluno");
+    // $aluno->setDesc_senha("@alun0");
+    // $aluno->insert();
+    // echo $aluno;
 
+// Alterar um usuário
+// $usuario = new Usuario();
+// $usuario->loadById(11);
+// $usuario->update("professor", "!@$@%#@");
+// echo $usuario;
+
+// Deletar um usuário
 $usuario = new Usuario();
-$usuario->loadById(11);
-$usuario->update("professor", "!@$@%#@");
+$usuario->loadById(12);
+$usuario->delete();
 echo $usuario;

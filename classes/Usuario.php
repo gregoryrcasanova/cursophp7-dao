@@ -113,6 +113,18 @@ class Usuario {
         ]);
     }
 
+    public function delete() {
+        $sql = new Sql();
+        $sql->query("DELETE FROM tb_usuarios WHERE id_usuario = :ID", [
+            ":ID" => $this->getId_usuario()
+        ]);
+
+        $this->setId_usuario(0);
+        $this->setDesc_login("");
+        $this->setDesc_senha("");
+        $this->setDt_cadastro(new DateTime());
+    }   
+
     public function setData($data) {
 
         $this->setId_usuario($data['id_usuario']);
